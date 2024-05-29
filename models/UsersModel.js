@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const studentSchema = new Schema({
+
+const userSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   gender: { type: String, required: true },
+  role:{type:String, required:true, enum: ['student', 'teacher', 'admin']},
   address: {
     street: { type: String, required: true },
     city: { type: String, required: true },
@@ -34,4 +35,5 @@ const studentSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('Students', studentSchema);
+const users = mongoose.model('users', userSchema);
+module.exports = users;
