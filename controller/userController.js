@@ -3,11 +3,12 @@ const bcrypt = require("bcrypt");
 
 const JWT = require("jsonwebtoken");
 
-const Student = require("../models/Student");
-const Teacher = require("../models/Teacher");
-const Admin = require("../models/Admin");
+const Student = require("../models/studentSchema");
+const Teacher = require("../models/teacherSchema");
+const Admin = require("../models/adminSchema");
 const users = require("../models/UsersModel");
 const Classroom = require("../models/Classrooms")
+const Grade = require("../models/Grades")
 //Adesc Register user
 //@route Post /api/users/register
 //@acess public
@@ -18,6 +19,7 @@ const registeruser = asynchandler(async (req, res) => {
     dateOfBirth,
     gender,
     role,
+    schoolName,
     address,
     contactNumber,
     email,
@@ -60,6 +62,7 @@ const registeruser = asynchandler(async (req, res) => {
       dateOfBirth,
       gender,
       role,
+      schoolName,
       address,
       contactNumber,
       email,
@@ -81,41 +84,47 @@ const registeruser = asynchandler(async (req, res) => {
   }
 
   if (role === "student") {
-    const {
-      fullName,
-      parentGuardian,
-      previousSchool,
-      grades
-    } = req.body;
-    const student = Student.create({
-      fullName,
-      parentGuardian,
-      previousSchool,
-      grades,
-    });
+    const student =  Student.create({
+      ...req.body,
+      school: req.body.adminID,
+      
+  });
 
-    await student.save();
+  let result = await student.save();
+
+  
+  res.send(result);
   }
   if (role === "teacher") {
-    const {
-      fullName,
-      previousSchool,
-    } = req.body;
-    const teacher = Teacher.create({
-      fullName,
-      previousSchool,
-    });
+    const teacher =  Teacher.create({
+      ...req.body,
+      school: req.body.adminID,
+      
+  });
 
-    await teacher.save();
+  let result = await teacher.save();
+
+  
+  res.send(result);
   }
   if (role === "admin") {
     const {
       fullName,
-      previousSchool,
+      email,  
+      schoolName,
+      account
+      
+      
     } = req.body;
     const admin = Admin.create({
       fullName,
-      previousSchool,
+      email,
+      schoolName,
+      account:{
+        username:account.username
+      }
+      
+
     });
 
     await admin.save();
@@ -172,7 +181,6 @@ const currentuser = asynchandler(async (req, res) => {
 
 
 const getAllUsers = asynchandler(async (req, res) => {
-  console.log("Fetching all users...");
   const user = await users.find({});
  
 
