@@ -151,7 +151,8 @@ const   loginuser = asynchandler(async (req, res) => {
         user: {
           username: user.account.username,
           email: user.email,
-          role:user.role
+          role:user.role,
+          adminID: user._id
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -160,7 +161,8 @@ const   loginuser = asynchandler(async (req, res) => {
 
     const userToSend = {
       username: user.account.username,
-      role: user.role
+      role: user.role,
+      adminID: user._id
     }
 
     res.status(200).json({ accessToken, user: userToSend });
@@ -180,7 +182,7 @@ const currentuser = asynchandler(async (req, res) => {
 
 
 
-const getAllUsers = asynchandler(async (req, res) => {
+const getAllUsers = asynchandler(async (req, res) => {  
   const user = await users.find({});
  
 

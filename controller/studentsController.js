@@ -3,9 +3,9 @@ const Student = require('../models/studentSchema.js');
 const Subject = require('../models/subjectSchema.js');
 
 
-const getStudents = async (req, res) => {
+const   getStudents = async (req, res) => {
     try {
-        let students = await Student.find({ school: req.params._id }).populate("sclassName", "sclassName");
+        let students = await Student.find({});
         if (students.length > 0) {
             let modifiedStudents = students.map((student) => {
                 return { ...student._doc, password: undefined };
