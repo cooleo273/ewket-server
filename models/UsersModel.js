@@ -13,7 +13,6 @@ const userSchema = new mongoose.Schema({
   },
   schoolName: {
     type: String,
-    unique: true,
     required: true,
   },
   contactNumber: { type: String, required: true },

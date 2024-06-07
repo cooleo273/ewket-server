@@ -9,38 +9,52 @@ const Admin = require("../models/adminSchema");
 const users = require("../models/UsersModel");
 const Classroom = require("../models/Classrooms")
 const Grade = require("../models/Grades")
-//Adesc Register user
-//@route Post /api/users/register
-//@acess public
+
 
 const registeruser = asynchandler(async (req, res) => {
   const {
     fullName,
     dateOfBirth,
     gender,
+    school,
     role,
-    schoolName,
-    address,
     contactNumber,
     email,
     nationality,
     identificationNumber,
-    parentGuardian,
+    pgname,
+    pgcontactNumber,
+    pgemail,
+    pgstreet,
+    schoolName,
+    pgcity,
+    pgstate,
+    pgzip,
+    pgrelationship,
     previousSchool,
-    account,
+    accountusername,
+    accountpassword,
+    city,
+    state,
+    zip,
+    street
   } = req.body;
   if (
     !role ||
-    !account ||
+    !street ||
+    !zip ||
+    !city ||
+    !state ||
+    !schoolName ||
+    !accountusername ||
+    !accountpassword ||
     !email ||
     !fullName ||
     !dateOfBirth ||
     !gender ||
-    !address ||
     !contactNumber ||
     !nationality ||
     !identificationNumber ||
-    !parentGuardian ||
     !previousSchool
   ) {
     res.status(400);
@@ -54,7 +68,7 @@ const registeruser = asynchandler(async (req, res) => {
   //Hash password
 
   try {
-    const hashedPassword = await bcrypt.hash(account.password, 10);
+    const hashedPassword = await bcrypt.hash(accountpassword, 10);
     console.log("Password hashed");
 
     const user = await users.create({
@@ -63,15 +77,32 @@ const registeruser = asynchandler(async (req, res) => {
       gender,
       role,
       schoolName,
-      address,
+      address:{
+        city: city,
+        state: state,
+        zip: zip,
+        street: street
+      },
       contactNumber,
       email,
       nationality,
       identificationNumber,
-      parentGuardian,
+      parentGuardian: {
+        name: pgname,
+        relationship: pgrelationship,
+        email: pgemail,
+        contactNumber: pgcontactNumber,
+        address:{
+          street: pgstreet,
+          city: pgcity,
+          state: pgstate,
+          zip: pgzip
+        }
+      },
+      school,
       previousSchool,
       account: {
-        username: account.username,
+        username: accountusername,
         password: hashedPassword,
       },
     });
@@ -83,7 +114,7 @@ const registeruser = asynchandler(async (req, res) => {
     res.status(500).json({ message: "Error registering user", error });
   }
 
-  if (role === "student") {
+    if (role === "student") {
     const student =  Student.create({
       ...req.body,
       school: req.body.adminID,
@@ -133,9 +164,7 @@ const registeruser = asynchandler(async (req, res) => {
   
 });
 
-//Adesc Register user
-//@route Post /api/users/register
-//@acess public
+
 
 const   loginuser = asynchandler(async (req, res) => {
   const { username, password } = req.body;
@@ -149,9 +178,9 @@ const   loginuser = asynchandler(async (req, res) => {
     const accessToken = JWT.sign(
       {
         user: {
-          username: user.account.username,
+          username,
           email: user.email,
-          role:user.role,
+          role: user.role,
           adminID: user._id
         },
       },
@@ -160,7 +189,7 @@ const   loginuser = asynchandler(async (req, res) => {
     );
 
     const userToSend = {
-      username: user.account.username,
+      username,
       role: user.role,
       adminID: user._id
     }
@@ -172,9 +201,6 @@ const   loginuser = asynchandler(async (req, res) => {
   res.json({ message: "login user" });
  
 });
-//Adesc Current user
-//@route Post /api/users/current
-//@acess private
 
 const currentuser = asynchandler(async (req, res) => {
   res.json(req.user);
