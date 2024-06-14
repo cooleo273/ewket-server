@@ -139,23 +139,9 @@ const registeruser = asynchandler(async (req, res) => {
   res.send(result);
   }
   if (role === "admin") {
-    const {
-      fullName,
-      email,  
-      schoolName,
-      account
-      
-      
-    } = req.body;
+   
     const admin = Admin.create({
-      fullName,
-      email,
-      schoolName,
-      account:{
-        username:account.username
-      }
-      
-
+      ...req.body
     });
 
     await admin.save();

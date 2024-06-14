@@ -29,7 +29,7 @@ const sclassCreate = async (req, res) => {
 
 const sclassList = async (req, res) => {
     try {
-        let sclasses = await Sclass.find({ student: req.params._id })
+        let sclasses = await Sclass.find({})
         if (sclasses.length > 0) {
             res.send(sclasses)
         } else {
@@ -42,9 +42,9 @@ const sclassList = async (req, res) => {
 
 const getSclassDetail = async (req, res) => {
     try {
-        let sclass = await Sclass.findById(req.params._id);
+        let sclass = await Sclass.findById(req.params.id);
         if (sclass) {
-            sclass = await sclass.populate("school", "schoolName")
+            
             res.send(sclass);
         }
         else {
@@ -57,7 +57,7 @@ const getSclassDetail = async (req, res) => {
 
 const getSclassStudents = async (req, res) => {
     try {
-        let students = await Student.find({ sclassName: req.params._id })
+        let students = await Student.find({ sclassName: req.params.id })
         if (students.length > 0) {
             let modifiedStudents = students.map((student) => {
                 return { ...student._doc, password: undefined };

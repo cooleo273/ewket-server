@@ -10,12 +10,10 @@ const adminSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
-    account: {
-        username: { type: String, required: true }
-      },
+    
     role: {
         type: String,
-        default: "Admin"
+        default: "admin"
     },
     schoolName: {
         type: String,
