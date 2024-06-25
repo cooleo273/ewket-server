@@ -20,6 +20,11 @@ const studentSchema = new mongoose.Schema({
         ref: 'Admin',
         required: true,
     },
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true,
+    },
     role: {
         type: String,
         default: "student"

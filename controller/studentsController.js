@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const Student = require('../models/studentSchema.js');
 const Subject = require('../models/subjectSchema.js');
+const users = require('../models/UsersModel.js');
 
 
 const   getStudents = async (req, res) => {
@@ -76,19 +77,39 @@ const deleteStudentsByClass = async (req, res) => {
 const updateStudent = async (req, res) => {
     try {
         if (req.body.password) {
-            const salt = await bcrypt.genSalt(10)
-            res.body.password = await bcrypt.hash(res.body.password, salt)
+            const salt = await bcrypt.genSalt(10);
+            req.body.password = await bcrypt.hash(req.body.password, salt);
         }
-        let result = await Student.findByIdAndUpdate(req.params._id,
-            { $set: req.body },
-            { new: true })
 
-        result.password = undefined;
-        res.send(result)
+        let studentUpdate = await Student.findByIdAndUpdate(
+            req.params.id,
+            { $set: req.body },
+            { new: true }
+        );
+        let userUpdate = await users.findByIdAndUpdate(
+            req.params.id,
+            { $set: req.body },
+            { new: true }
+        );
+
+        if (!studentUpdate) {
+            return res.status(404).send('Student not found');
+        }
+
+        studentUpdate.password = undefined;
+        userUpdate.password = undefined;
+         // Remove password from the response
+        res.send({
+            studentUpdate,
+            userUpdate
+        });
+       
     } catch (error) {
-        res.status(500).json(error);
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ error: 'Server error' });
     }
-}
+};
+
 
 const updateExamResult = async (req, res) => {
     const { subName, marksObtained } = req.body;

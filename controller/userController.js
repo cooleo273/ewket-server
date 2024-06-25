@@ -106,45 +106,42 @@ const registeruser = asynchandler(async (req, res) => {
         password: hashedPassword,
       },
     });
+    
+    if (role === "student") {
+      const student =  Student.create({
+        ...req.body,
+        school: req.body.adminID,
+        userId: user.id
+        
+    });
+    let result = await student.save();
 
+    res.send(result);
+    }
+    if (role === "teacher") {
+      const teacher =  Teacher.create({
+        ...req.body,
+        school: req.body.adminID,
+        
+    });
+  
+    let result = await teacher.save();
+    res.send(result);
+    }
+    if (role === "admin") {
+     
+      const admin = Admin.create({
+        ...req.body
+      });
+  
+      await admin.save();
+    }
+  
     console.log(`user created: ${user}`);
     res.status(201).json({ id: user._id, email: user.email });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ message: "Error registering user", error });
-  }
-
-    if (role === "student") {
-    const student =  Student.create({
-      ...req.body,
-      school: req.body.adminID,
-      
-  });
-
-  let result = await student.save();
-
-  
-  res.send(result);
-  }
-  if (role === "teacher") {
-    const teacher =  Teacher.create({
-      ...req.body,
-      school: req.body.adminID,
-      
-  });
-
-  let result = await teacher.save();
-
-  
-  res.send(result);
-  }
-  if (role === "admin") {
-   
-    const admin = Admin.create({
-      ...req.body
-    });
-
-    await admin.save();
   }
 
   
