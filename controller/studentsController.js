@@ -21,7 +21,7 @@ const   getStudents = async (req, res) => {
 
 const getStudentDetail = async (req, res) => {
     try {
-        let student = await Student.findById(req.params._id)
+        let student = await Student.findById(req.params.id)
             .populate("school", "schoolName")
             .populate("sclassName", "sclassName")
             .populate("examResult.subName", "subName")
@@ -77,9 +77,9 @@ const updateStudent = async (req, res) => {
     try {
         if (req.body.password) {
             const salt = await bcrypt.genSalt(10)
-            res.body.password = await bcrypt.hash(res.body.password, salt)
+            req.body.password = await bcrypt.hash(req.body.password, salt)
         }
-        let result = await Student.findByIdAndUpdate(req.params._id,
+        let result = await Student.findByIdAndUpdate(req.params.id,
             { $set: req.body },
             { new: true })
 
@@ -121,7 +121,7 @@ const studentAttendance = async (req, res) => {
     const { subName, status, date } = req.body;
 
     try {
-        const student = await Student.findById(req.params._id);
+        const student = await Student.findById(req.params.id);
 
         if (!student) {
             return res.send({ message: 'Student not found' });

@@ -15,6 +15,11 @@ const studentSchema = new mongoose.Schema({
         ref: 'sclass',
         required: true,
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true,
+    },
     school: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin',
