@@ -124,7 +124,8 @@ const registeruser = async (req, res) => {
     } else if (role === "teacher") {
       const teacher = await Teacher.create({
         ...req.body,
-        school: req.body.adminID
+        school: req.body.adminID,
+        userId: user._id
       });
       createdItem = await teacher.save();
     } else if (role === "admin") {

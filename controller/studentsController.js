@@ -13,7 +13,7 @@ const   getStudents = async (req, res) => {
             });
             res.send(modifiedStudents);
         } else {
-            res.send({ message: "No students found" });
+            res.send({ message: "No students found" })  
         }
     } catch (err) {
         res.status(500).json(err);

@@ -18,6 +18,16 @@ const teacherSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'subject',
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true,
+    },
+    teachSclass: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'sclass',
+        required: true,
+    },
     attendance: [{
         date: {
             type: Date,
